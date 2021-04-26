@@ -136,6 +136,16 @@ namespace PCRAutoTimeline
         );
 
         [DllImport("kernel32.dll")]
+        public static extern bool ReadProcessMemory
+        (
+            long lpProcess,
+            long lpBaseAddress,
+            out ObscuredLong lpBuffer,
+            long nSize,
+            int BytesRead
+        );
+
+        [DllImport("kernel32.dll")]
         public static extern int VirtualQueryEx
         (
             long hProcess,

@@ -9,16 +9,28 @@
 
 ### 编写timeline.lua
 
-lua api:
+AutoPcrApi:
 
-- `void autopcr.press(id)` 点击站位为id的角色，可能点不上
+- `void autopcr.calibrate(id)` 对站位id进行校准
+- `void autopcr.press(id)` 点击站位为id的角色，不占用时间，但可能点不上
 - `void autopcr.framePress(id)` 点击站位为id的角色，保证点上，占用两帧
-- `long autopcr.getUnitAddr(unit_id, rarity, rank)` 根据数据获取角色的句柄，返回一个数字
+- `long autopcr.getUnitAddr(unit_id, rarity, rank)` 根据数据获取角色的句柄，请务必保证搜索时该角色tp为0且满血，否则会搜索失败
 - `float autopcr.getTp(unit_handle)` 根据获得的句柄返回角色当前tp
+- `long autopcr.getHp(unit_handle)` 根据获得的句柄返回角色当前hp
+- `long autopcr.getMaxHp(unit_handle)` 根据获得的句柄返回角色最大hp
 - `int autopcr.getFrame()` 返回当前时间
 - `float autopcr.getTime()` 返回当前帧数
 - `void autopcr.waitFrame(frame)` 暂停程序直到帧数达到
 - `void autopcr.waitTime(frame)` 暂停程序直到时间达到
+
+MiniTouchApi:
+
+- `void getMaxX()` 返回最大X
+- `void getMaxY()` 返回最大Y
+- `void connect(host, port)` 链接minitouch server
+- `void write(text)` 写指令
+- `void setPos(id, x, y)` 注册按键id
+- `void press(id)` 按下某键
 
 ### 依赖
 
@@ -30,10 +42,14 @@ lua api:
 
 ### 运行程序
 
-1. 必须使用管理员模式运行，先进入会战（模拟战也可），然后在开始时暂停
+1. 必须使用管理员模式运行，设置帧率为60，先进入会战（模拟战也可），然后在开始时暂停
 2. 先进行五个站位的鼠标位置的校准，从1-5，将鼠标移至对应位置然后在窗口按回车即可
 3. 输入模拟器主程序的PID(不要输错成前台ui程序)
 4. 等待扫描，结束后会显示当前帧数和剩余时间
 5. 继续模拟器即可
 6. 继续运行后不要乱动鼠标！！！
+
+### 关于Minitouch
+
+Minitouch可以显著减小模拟器层触控延迟，repo内附带bin版minitouch，[使用说明](https://github.com/DeviceFarmer/minitouch)
 
