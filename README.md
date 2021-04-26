@@ -2,8 +2,12 @@
 
 代码基于GPLv3开源，仅供学习交流，禁止用于商业用途
 
-公主连结帧精度自动打轴(原理读取模拟器内存，时间识别误差在0.1ms以下，但是由于模拟器延迟，可能会有±1帧的误差)  
+公主连结帧精度自动打轴(原理读取模拟器内存，时间识别误差在0.1ms以下，但是由于模拟器延迟，可能会有±1帧的误差)
+支持hp/tp试试获取以及lua编程逻辑
+
 仅适配x64模拟器 x32的pcr
+
+(什么?你不想写代码就想打自动轴?请打开auto)
 
 ## 用法
 
@@ -25,12 +29,12 @@ AutoPcrApi:
 
 MiniTouchApi:
 
-- `void getMaxX()` 返回最大X
-- `void getMaxY()` 返回最大Y
-- `void connect(host, port)` 链接minitouch server
-- `void write(text)` 写指令
-- `void setPos(id, x, y)` 注册按键id
-- `void press(id)` 按下某键
+- `void minitouch.getMaxX()` 返回最大X
+- `void minitouch.getMaxY()` 返回最大Y
+- `void minitouch.connect(host, port)` 链接minitouch server
+- `void minitouch.write(text)` 写指令
+- `void minitouch.setPos(id, x, y)` 注册按键id
+- `void minitouch.press(id)` 按下某键
 
 ### 依赖
 

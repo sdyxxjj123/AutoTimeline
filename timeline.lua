@@ -1,3 +1,4 @@
+-- scan character handles
 local charas = {
     autopcr.getUnitAddr(104701, 5, 12),
     autopcr.getUnitAddr(104301, 5, 13),
@@ -23,14 +24,13 @@ for i = 1, 5 do
 end
 --]]
 
-while (autopcr.getTime() > 1)
+while (autopcr.getTime() > 1) --when not end
 do
-    print(autopcr.getTime())
-    for i = 1, 5 do
-        if (autopcr.getTp(charas[i]) == 1000)
+    for i = 1, 5 do --judge every chara
+        if (autopcr.getTp(charas[i]) == 1000) --ready for tp
         then
             --autopcr.framePress(i);
-            minitouch.press(i);
+            minitouch.press(i); --trigger ub press
             break;
         end
     end
