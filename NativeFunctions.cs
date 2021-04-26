@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using CodeStage.AntiCheat.ObscuredTypes;
 
 namespace PCRAutoTimeline
 {
@@ -107,7 +108,7 @@ namespace PCRAutoTimeline
         [DllImport("kernel32.dll")]
         public static extern bool ReadProcessMemory
         (
-            int lpProcess,
+            long lpProcess,
             long lpBaseAddress,
             byte[] lpBuffer,
             long nSize,
@@ -115,137 +116,33 @@ namespace PCRAutoTimeline
         );
 
         [DllImport("kernel32.dll")]
-        public static extern bool WriteProcessMemory
-        (
-            int lpProcess,
-            long lpBaseAddress,
-            byte[] lpBuffer,
-            long nSize,
-            int BytesWrite
-        );
-        [DllImport("kernel32.dll")]
         public static extern bool ReadProcessMemory
         (
-            int lpProcess,
+            long lpProcess,
             long lpBaseAddress,
-            ref int lpBuffer,
+            out ObscuredInt lpBuffer,
             long nSize,
             int BytesRead
         );
-        [DllImport("kernel32.dll")]
-        public static extern bool WriteProcessMemory
-        (
-            int lpProcess,
-            long lpBaseAddress,
-            ref int lpBuffer,
-            long nSize,
-            int BytesWrite
-        );
+
         [DllImport("kernel32.dll")]
         public static extern bool ReadProcessMemory
         (
-            int lpProcess,
+            long lpProcess,
             long lpBaseAddress,
-            ref bool lpBuffer,
+            out ObscuredFloat lpBuffer,
             long nSize,
             int BytesRead
-        );
-        [DllImport("kernel32.dll")]
-        public static extern bool WriteProcessMemory
-        (
-            int lpProcess,
-            long lpBaseAddress,
-            ref bool lpBuffer,
-            long nSize,
-            int BytesWrite
-        );
-        [DllImport("kernel32.dll")]
-        public static extern bool ReadProcessMemory
-        (
-            int lpProcess,
-            long lpBaseAddress,
-            ref float lpBuffer,
-            long nSize,
-            int BytesRead
-        );
-        [DllImport("kernel32.dll")]
-        public static extern bool WriteProcessMemory
-        (
-            int lpProcess,
-            long lpBaseAddress,
-            ref float lpBuffer,
-            long nSize,
-            int BytesWrite
-        );
-        [DllImport("kernel32.dll")]
-        public static extern bool ReadProcessMemory
-        (
-            int lpProcess,
-            long lpBaseAddress,
-            ref byte lpBuffer,
-            int nSize,
-            int BytesRead
-        );
-        [DllImport("kernel32.dll")]
-        public static extern bool WriteProcessMemory
-        (
-            int lpProcess,
-            long lpBaseAddress,
-            ref byte lpBuffer,
-            long nSize,
-            int BytesWrite
         );
 
         [DllImport("kernel32.dll")]
         public static extern int VirtualQueryEx
         (
-            int hProcess,
+            long hProcess,
             long lpAddress,
             out MEMORY_BASIC_INFORMATION lpBuffer,
             int dwLength
         );
-
-        [DllImport("kernel32.dll")]
-        public static extern int VirtualAllocEx(int hProcess, int lpAddress, int dwSize, AllocationType flAllocationType, MemoryProtection flProtect);
-
-        [DllImport("kernel32.dll")]
-        public static extern int VirtualFreeEx(int hProcess, int lpAddress, int dwSize, int dwFreeType = 0x8000);
-
-
-        public static byte[] ReadFromMultiOffsets(int hProcess, int addr, int len, params int[] offsets)
-        {
-            byte[] result = new byte[len];
-            int v = addr;
-            for (int i = 0; i < offsets.Length - 1; i++)
-            {
-                ReadProcessMemory(hProcess, v + offsets[i], ref v, 4, 0);
-            }
-            ReadProcessMemory(hProcess, v + offsets[offsets.Length - 1], result, len, 0);
-            return result;
-        }
-
-        public static void WriteFromMultiOffsets(int hProcess, int addr, byte[] value, params int[] offsets)
-        {
-            int v = addr;
-            for (int i = 0; i < offsets.Length - 1; i++)
-            {
-                ReadProcessMemory(hProcess, v + offsets[i], ref v, 4, 0);
-            }
-            WriteProcessMemory(hProcess, v + offsets[offsets.Length - 1], value, value.Length, 0);
-        }
-
-        [DllImport("kernel32")]
-        public static extern IntPtr CreateRemoteThread(
-          int hProcess,
-          int lpThreadAttributes,
-          int dwStackSize,
-          int lpStartAddress, // raw Pointer into remote process
-          int lpParameter,
-          int dwCreationFlags,
-          out int lpThreadId
-        );
-
-
 
         [DllImport("kernel32.dll")]
         public static extern int OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);

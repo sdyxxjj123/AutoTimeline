@@ -11,7 +11,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="timeline.txt">
+    <PackageReference Include="NeoLua" Version="1.3.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="timeline.lua">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

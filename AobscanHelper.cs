@@ -13,16 +13,21 @@ namespace PCRAutoTimeline
         /// <param name="b">被搜索的数组</param>
         /// <param name="blen">被搜数组的长度</param>
         /// <returns>失败返回-1</returns>
-        private static long Memmem(byte[] a, long alen, byte[] b, int blen)
+        private static long Memmem(byte[] a, long alen, byte[] b, int blen, Func<long, bool> matchValidator)
         {
-            long i, j;
-            for (i = 0; i < alen - blen; ++i)
+            long i, j, diff = alen - blen;
+            for (i = 0; i < diff; ++i)
             {
-                for (j = 0; j < blen; ++j)
+                j = 0;
+                while (j < blen)
+                {
                     if (a[i + j] != b[j])
-                        break;
-                if (j >= blen)
+                        goto next;
+                    ++j;
+                }
+                if (matchValidator(i))
                     return i;
+                next: ;
             }
             return -1;
         }
@@ -33,7 +38,7 @@ namespace PCRAutoTimeline
         /// <param name="ctx"></param>
         /// <param name="aob"></param>
         /// <returns></returns>
-        public static long Aobscan(int handle, byte[] aob, Func<long, bool> matchValidator, int blockToStart = 0)
+        public static (long, long) Aobscan(long handle, byte[] aob, Func<long, bool> matchValidator, long blockToStart = 0)
         {
             long i = blockToStart;
             while (i < long.MaxValue)
@@ -51,15 +56,15 @@ namespace PCRAutoTimeline
                 Console.Write($"\rscanning {mbi.BaseAddress:x}...");
                 byte[] va = new byte[mbi.RegionSize];
                 NativeFunctions.ReadProcessMemory(handle, mbi.BaseAddress, va, mbi.RegionSize, 0);
-                long r = Memmem(va, mbi.RegionSize, aob, aob.Length);
+                long r = Memmem(va, mbi.RegionSize, aob, aob.Length, r => matchValidator(mbi.BaseAddress + r));
+                //long r = KMP.IndexOf(va, aob);
                 if (r >= 0)
                 {
-                    if (matchValidator(mbi.BaseAddress + r))
-                        return mbi.BaseAddress + r;
+                    return (mbi.BaseAddress + r, i);
                 }
                 i = mbi.BaseAddress + mbi.RegionSize;
             }
-            return -1;
+            return (-1, -1);
         }
     }
 }
