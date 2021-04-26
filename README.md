@@ -17,7 +17,7 @@ AutoPcrApi:
 
 - `void autopcr.calibrate(id)` 对站位id进行校准
 - `void autopcr.press(id)` 点击站位为id的角色，不占用时间，但可能点不上
-- `void autopcr.framePress(id)` 点击站位为id的角色，保证点上，占用两帧
+- `void autopcr.framePress(id)` 点击站位为id的角色，保证点上，占用两帧，一般用于连点
 - `long autopcr.getUnitAddr(unit_id, rarity, rank)` 根据数据获取角色的句柄，请务必保证搜索时该角色tp为0且满血，否则会搜索失败
 - `float autopcr.getTp(unit_handle)` 根据获得的句柄返回角色当前tp
 - `long autopcr.getHp(unit_handle)` 根据获得的句柄返回角色当前hp
@@ -26,21 +26,23 @@ AutoPcrApi:
 - `float autopcr.getTime()` 返回当前帧数
 - `void autopcr.waitFrame(frame)` 暂停程序直到帧数达到
 - `void autopcr.waitTime(frame)` 暂停程序直到时间达到
+- `void autopcr.setOffset(frame_offset, time_offset)` 设定延迟校准参数
 
 MiniTouchApi:
 
 - `void minitouch.getMaxX()` 返回最大X
 - `void minitouch.getMaxY()` 返回最大Y
 - `void minitouch.connect(host, port)` 链接minitouch server
-- `void minitouch.write(text)` 写指令
-- `void minitouch.setPos(id, x, y)` 注册按键id
-- `void minitouch.press(id)` 按下某键
+- `void minitouch.write(text)` 写minitouch指令
+- `void minitouch.setPos(id, x, y)` 注册站位id
+- `void minitouch.press(id)` 点击站位为id的角色，不占用时间，但可能点不上
+- `void minitouch.framePress(id)` 点击站位为id的角色，保证点上，占用两帧，一般用于连点
 
 ### 依赖
 
 项目依赖于`.net 5.0 runtime`，请自行百度
 
-### 校准
+### 延迟校准
 
 校准代表着模拟器处理造成的延迟，一般会保持不变，技能释放时，如果打开技能动画，帧数会暂停，你可以根据暂停时候的值和预期值做出帧数的校准
 
@@ -56,4 +58,4 @@ MiniTouchApi:
 ### 关于Minitouch
 
 Minitouch可以显著减小模拟器层触控延迟，repo内附带bin版minitouch，[使用说明](https://github.com/DeviceFarmer/minitouch)
-
+如果有的菜鸡弄不明白怎么用，也可以使用传统方法。

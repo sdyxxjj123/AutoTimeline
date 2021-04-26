@@ -8,7 +8,7 @@ local charas = {
 };
 
 -- data for 1600x900
----[[ minitouch test
+--[[ minitouch test
 minitouch.connect("localhost", 1111);
 for i = 0, 4 do
     minitouch.setPos(5 - i, 400 + i * 208, 860);
@@ -18,22 +18,41 @@ minitouch.setPos(7, 1544, 839); --forward
 minitouch.setPos(8, 1512, 43);  --pause
 --]]
 
---[[ mouse calibration
+---[[ mouse calibration
 for i = 1, 5 do
     autopcr.calibrate(i);
 end
 --]]
 
+---[[ auto ub
 while (autopcr.getTime() > 1) --when not end
 do
     for i = 1, 5 do --judge every chara
         if (autopcr.getTp(charas[i]) == 1000) --ready for tp
         then
+            print('trying to press '..i, 'frame='..autopcr.getFrame())
             --autopcr.framePress(i);
-            minitouch.press(i); --trigger ub press
+            minitouch.framePress(i); --trigger ub press
             break;
         end
     end
 end
+--]]
 
-minitouch.press(8);
+--[[ benchmark
+autopcr.setOffset(2, 0); -- hyperparam, 2 frame offset for minitouch
+
+autopcr.waitFrame(2000);
+minitouch.press(1);
+autopcr.waitFrame(2500);
+minitouch.press(2);
+autopcr.waitFrame(3000);
+minitouch.press(3);
+autopcr.waitFrame(3500);
+minitouch.press(4);
+autopcr.waitFrame(4000);
+minitouch.press(5);
+--]]
+
+autopcr.waitTime(.5);
+minitouch.framePress(8);

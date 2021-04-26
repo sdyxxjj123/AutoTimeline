@@ -26,10 +26,19 @@ namespace PCRAutoTimeline
             PressAt(mousepos[id]);
         }
 
+        private static int frameoff = 0; 
+        private static float timeoff = 0;
+
+        public static void setOffset(int frame, float time)
+        {
+            frameoff = frame;
+            timeoff = time;
+        }
+
         public static void waitOneFrame()
         {
             var frame = getFrame();
-            waitFrame(frame + 1);
+            _waitFrame(frame + 1);
         }
 
         public static void framePress(int id)
@@ -39,7 +48,6 @@ namespace PCRAutoTimeline
             NativeFunctions.mouse_event(NativeFunctions.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
             waitOneFrame();
             NativeFunctions.mouse_event(NativeFunctions.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-            waitOneFrame();
         }
 
         private static bool UnitEvaluator(int unitid, int rarity, int promotion, long addr)
@@ -62,11 +70,8 @@ namespace PCRAutoTimeline
         public static long getUnitAddr(int unitid, int rarity, int promotion)
         {
             var b = BitConverter.GetBytes(unitid);
-            var tuple = AobscanHelper.Aobscan(Program.hwnd, b.Concat(b).ToArray(),
-                addr => UnitEvaluator(unitid, rarity, promotion, addr), Program.@base - 0x20000000);
-            if (tuple.Item1 != -1) return tuple.Item1 - 0x244;
 
-            tuple = AobscanHelper.Aobscan(Program.hwnd, b.Concat(b).ToArray(),
+            var tuple = AobscanHelper.Aobscan(Program.hwnd, b.Concat(b).ToArray(),
                 addr => UnitEvaluator(unitid, rarity, promotion, addr));
             return tuple.Item1 != -1 ? tuple.Item1 - 0x244 : -1;
         }
@@ -100,15 +105,21 @@ namespace PCRAutoTimeline
             return Program.TryGetInfo(Program.hwnd, Program.addr).Item2;
         }
 
-        public static void waitFrame(int frame)
+        private static void _waitFrame(int frame)
         {
             WaitFor(inf => inf.Item1 >= frame);
         }
 
+        public static void waitFrame(int frame)
+        {
+            _waitFrame(frame - frameoff);
+        }
+
         public static void waitTime(float time)
         {
-            WaitFor(inf => inf.Item2 <= time);
+            WaitFor(inf => inf.Item2 <= time - timeoff);
         }
+
         private static (int, int) TryGetIntInt(long hwnd, long addr)
         {
             var data = new byte[16];
@@ -125,12 +136,18 @@ namespace PCRAutoTimeline
         private static void WaitFor(Func<(int, float), bool> check)
         {
             (int, float) frame;
+            var last = -1;
             do
             {
                 frame = Program.TryGetInfo(Program.hwnd, Program.addr);
-                Console.Write(
-                    $"\rframeCount = {frame.Item1}, limitTime = {frame.Item2}                  ");
+                if (frame.Item1 != last)
+                {
+                    Console.Write(
+                        $"\rframeCount = {frame.Item1}, limitTime = {frame.Item2}                  ");
+                    last = frame.Item1;
+                }
             } while (!check(frame));
+            Console.WriteLine();
         }
 
 

@@ -22,11 +22,19 @@ namespace PCRAutoTimeline
         public static int getMaxY() => maxy;
         public static int getMaxPressure() => maxpressure;
 
+        private static bool exiting = false;
+
+        public static void exit()
+        {
+            exiting = true;
+            client.Dispose();
+        }
+
         static Minitouch()
         {
             thread = new Thread(() =>
             {
-                while (true)
+                while (!exiting)
                 {
                     try
                     {
@@ -94,8 +102,17 @@ namespace PCRAutoTimeline
 
         public static void press(int id)
         {
-            write($"d 0 {pos[id].Item1} {pos[id].Item2} 50");
+            write($"d 0 {pos[id].Item1} {pos[id].Item2} 1");
             write("c");
+            write("u 0");
+            write("c");
+        }
+
+        public static void framePress(int id)
+        {
+            write($"d 0 {pos[id].Item1} {pos[id].Item2} 1");
+            write("c");
+            AutoPcr.waitOneFrame();
             write("u 0");
             write("c");
         }

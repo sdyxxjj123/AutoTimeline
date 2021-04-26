@@ -12,7 +12,7 @@ namespace PCRAutoTimeline
 {
     class Program
     {
-        public static long hwnd, addr, @base;
+        public static long hwnd, addr;
 
 
         private static readonly byte[] idcode =
@@ -30,6 +30,10 @@ namespace PCRAutoTimeline
 
         static void Main(string[] args)
         {
+            //Minitouch.connect("localhost", 1111);
+            //Minitouch.setPos(1, 100, 100);
+            //Minitouch.press(1);
+
             using var lua = new Lua();
             var env = lua.CreateEnvironment();
             env.RegisterPackage("autopcr", typeof(AutoPcr));
@@ -37,7 +41,6 @@ namespace PCRAutoTimeline
 
             var chunk = lua.CompileChunk(File.ReadAllText("timeline.lua"), "timeline.lua", new LuaCompileOptions());
 
-            chunk.Run(env);
             Console.Write("pid>");
             //var pid = int.Parse(Console.ReadLine());
             var pid = 11892;
@@ -55,9 +58,8 @@ namespace PCRAutoTimeline
             });
 
             addr = tuple.Item1;
-            @base = tuple.Item2;
 
-            Console.WriteLine($"addr = {addr:x}, base = {@base:x}");
+            Console.WriteLine($"addr = {addr:x}");
 
             Console.WriteLine();
 
@@ -68,6 +70,11 @@ namespace PCRAutoTimeline
             }
 
             chunk.Run(env);
+
+            Console.WriteLine("script finished.");
+            Minitouch.exit();
+
+            Console.ReadLine();
 
         }
     }
