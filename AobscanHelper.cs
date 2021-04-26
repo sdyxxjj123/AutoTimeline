@@ -16,7 +16,7 @@ namespace PCRAutoTimeline
         private static long Memmem(byte[] a, long alen, byte[] b, int blen, Func<long, bool> matchValidator)
         {
             long i, j, diff = alen - blen;
-            for (i = 0; i < diff; ++i)
+            for (i = 0; i < diff; i += 4) /* 4 bytes alignment */
             {
                 j = 0;
                 while (j < blen)
