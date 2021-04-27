@@ -59,3 +59,4 @@ MiniTouchApi:
 
 Minitouch可以显著减小模拟器层触控延迟，repo内附带bin版minitouch，[使用说明](https://github.com/DeviceFarmer/minitouch)
 如果有的菜鸡弄不明白怎么用，也可以使用传统方法。
+如果adb在path中可以用minitouch文件夹下的两个bat直接把minitouch开到1111端口(先运行adbshell再运行adbforwarding, adbshell不要关)

@@ -1,0 +1,1 @@
+adb forward tcp:1111 localabstract:minitouch
