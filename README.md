@@ -1,4 +1,4 @@
-# PCRAutoTimeline
+# AutoTimeline
 
 代码基于GPLv3开源，仅供学习交流，禁止用于商业用途
 
