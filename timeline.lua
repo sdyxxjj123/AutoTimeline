@@ -31,8 +31,8 @@ do
         if (autopcr.getTp(charas[i]) == 1000) --ready for tp
         then
             print('trying to press '..i, 'frame='..autopcr.getFrame())
-            --autopcr.framePress(i);
-            minitouch.framePress(i); --trigger ub press
+            autopcr.framePress(i);
+            --minitouch.framePress(i); --trigger ub press
             break;
         end
     end
